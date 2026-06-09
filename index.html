@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analog Communication Virtual Laboratory & Learning Platform</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="src/style.css">
+  
+  <!-- CDN Dependencies -->
+  <!-- KaTeX for math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+  <!-- jsPDF for exporting results -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Lucide Icons for dashboard design -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div id="app-container">
+    
+    <!-- 1. Left Navigation Sidebar -->
+    <aside id="sidebar">
+      <div class="brand">
+        <i data-lucide="radio" class="brand-logo"></i>
+        <span class="brand-name">RF-VirtualLab</span>
+      </div>
+
+      <div class="menu-section-label">1. Introduction</div>
+      <ul class="menu-list">
+        <li><a class="menu-item active" data-target="mod1"><i data-lucide="info"></i>Overview System</a></li>
+        <li><a class="menu-item" data-target="mod1a"><i data-lucide="sliders"></i>AM (DSB-TC) Lab</a></li>
+        <li><a class="menu-item" data-target="mod1b"><i data-lucide="activity"></i>DSB-SC Lab</a></li>
+        <li><a class="menu-item" data-target="mod1c"><i data-lucide="waves"></i>SSB-SC Lab</a></li>
+        <li><a class="menu-item" data-target="mod1d"><i data-lucide="trello"></i>VSB-SC Lab</a></li>
+      </ul>
+
+      <div class="menu-section-label">2. Hardware Modulators</div>
+      <ul class="menu-list">
+        <li><a class="menu-item" data-target="mod2a"><i data-lucide="layers"></i>AM Modulators</a></li>
+        <li><a class="menu-item" data-target="mod2b"><i data-lucide="filter"></i>SSB Generation</a></li>
+        <li><a class="menu-item" data-target="mod2c"><i data-lucide="download"></i>AM Detectors</a></li>
+        <li><a class="menu-item" data-target="mod2d"><i data-lucide="cpu"></i>Superheterodyne Rx</a></li>
+      </ul>
+
+      <div class="menu-section-label">3. Angle Modulation</div>
+      <ul class="menu-list">
+        <li><a class="menu-item" data-target="mod3"><i data-lucide="sparkles"></i>FM Laboratory</a></li>
+        <li><a class="menu-item" data-target="mod3-pm"><i data-lucide="maximize"></i>PM Laboratory</a></li>
+        <li><a class="menu-item" data-target="mod3-bessel"><i data-lucide="bar-chart-2"></i>Bessel Visualizer</a></li>
+      </ul>
+
+      <div class="menu-section-label">4. Multiplexing & Noise</div>
+      <ul class="menu-list">
+        <li><a class="menu-item" data-target="mod4-fdm"><i data-lucide="git-merge"></i>FDM Simulator</a></li>
+        <li><a class="menu-item" data-target="mod4-tdm"><i data-lucide="git-commit"></i>TDM Simulator</a></li>
+        <li><a class="menu-item" data-target="mod-noise"><i data-lucide="shield-alert"></i>Noise Laboratory</a></li>
+      </ul>
+
+      <div class="menu-section-label">5. Tools & Test</div>
+      <ul class="menu-list">
+        <li><a class="menu-item" data-target="mod-dashboard"><i data-lucide="layout-grid"></i>Comparison</a></li>
+        <li><a class="menu-item" data-target="mod-calc"><i data-lucide="calculator"></i>Calculator</a></li>
+        <li><a class="menu-item" data-target="mod-quiz"><i data-lucide="award"></i>Assessment Quiz</a></li>
+      </ul>
+    </aside>
+
+    <!-- 2. Middle Main Workspace Panel -->
+    <main id="workspace">
+      
+      <!-- Top header bar -->
+      <header>
+        <div class="status-badge">
+          <div class="status-dot"></div>
+          <span>RF Workbench Calibrated</span>
+        </div>
+        <button class="btn btn-primary" id="btn-export-pdf">
+          <i data-lucide="file-down"></i> Export Lab Report
+        </button>
+      </header>
+
+      <!-- TAB 1: Introduction to Communication Systems -->
+      <div class="tab-panel active" id="mod1">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">General Communication System</h2>
+          <p style="font-size:0.85rem; line-height:1.5; color:var(--text-muted)">
+            Analog communication involves transmitting continuously variable baseband information signals over a physical channel using modulation.
+            Click each block below to inspect its sub-components and equations.
+          </p>
+          
+          <div class="diagram-container">
+            <div class="block-diagram">
+              <div class="diagram-block" data-block="source">Source</div>
+              <div class="diagram-arrow flowing"></div>
+              <div class="diagram-block modulator" data-block="transmitter">Transmitter</div>
+              <div class="diagram-arrow flowing"></div>
+              <div class="diagram-block" data-block="channel">Channel</div>
+              <div class="diagram-arrow flowing"></div>
+              <div class="diagram-block receiver" data-block="receiver">Receiver</div>
+              <div class="diagram-arrow flowing"></div>
+              <div class="diagram-block" data-block="destination">Destination</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-panel math-card">
+          <h3 class="control-card-title">Principles of Modulation</h3>
+          <p style="font-size:0.85rem; line-height:1.5; color:var(--text-muted); margin-bottom:1rem">
+            <strong>Why is Modulation Needed?</strong><br>
+            1. **Antenna Size Reduction**: The size of a dipole antenna is proportional to wavelength (λ = c/f). Without modulation, transmitting audio frequencies (e.g. 3 kHz) requires antennas over 50 km long! Modulation shifts the signal to MHz bands, reducing antenna size to meters.<br>
+            2. **Multiplexing**: Multiple transmitters can transmit over the same channel simultaneously on separate frequencies without interfering.<br>
+            3. **Noise Immunity**: Certain modulation types (like FM) exchange bandwidth for high noise immunity.
+          </p>
+        </div>
+      </div>
+
+      <!-- TAB 1A: AM Modulation (DSB-TC) -->
+      <div class="tab-panel" id="mod1a">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">AM Modulation Controls</h2>
+          
+          <!-- Message signal parameters -->
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Message Frequency (fm)
+                <span class="tooltip-icon" data-tooltip="Frequency of the low-frequency information baseband wave.">?</span>
+              </span>
+              <span class="control-value" id="val-am-fm">1.0 kHz</span>
+            </div>
+            <input type="range" id="am-fm" min="100" max="2500" value="1000" step="50">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Message Amplitude (Am)
+                <span class="tooltip-icon" data-tooltip="Amplitude/strength of the message wave.">?</span>
+              </span>
+              <span class="control-value" id="val-am-am">1.0 V</span>
+            </div>
+            <input type="range" id="am-am" min="0.1" max="2.0" value="1.0" step="0.1">
+          </div>
+
+          <!-- Carrier signal parameters -->
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Frequency (fc)
+                <span class="tooltip-icon" data-tooltip="Frequency of the high-frequency carrier wave. Must be fc >> fm.">?</span>
+              </span>
+              <span class="control-value" id="val-am-fc">15.0 kHz</span>
+            </div>
+            <input type="range" id="am-fc" min="5000" max="30000" value="15000" step="500">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Amplitude (Ac)
+                <span class="tooltip-icon" data-tooltip="Carrier amplitude. Influences modulation depth index.">?</span>
+              </span>
+              <span class="control-value" id="val-am-ac">1.5 V</span>
+            </div>
+            <input type="range" id="am-ac" min="0.5" max="3.0" value="1.5" step="0.1">
+          </div>
+
+          <!-- Modulation Index -->
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Modulation Index (μ)
+                <span class="tooltip-icon" data-tooltip="Depth of modulation (Am / Ac). Value dictates distortion state.">?</span>
+              </span>
+              <span class="control-value" id="val-am-mu">0.67</span>
+            </div>
+            <input type="range" id="am-mu" min="0.0" max="2.0" value="0.67" step="0.02">
+          </div>
+
+          <!-- Presets -->
+          <div class="mode-toggle-group">
+            <button class="mode-btn" id="mode-under">Under Mod (μ < 1)</button>
+            <button class="mode-btn" id="mode-critical">Critical (μ = 1)</button>
+            <button class="mode-btn" id="mode-over">Over Mod (μ > 1)</button>
+          </div>
+        </div>
+
+        <div class="glass-panel control-card">
+          <h3 class="control-card-title">Live Calculations</h3>
+          <table class="calc-table">
+            <thead>
+              <tr><th>Parameter</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Modulation Index (μ)</td><td id="calc-am-mu" class="val">-</td></tr>
+              <tr><td>Carrier Power (Pc)</td><td id="calc-am-pc" class="val">-</td></tr>
+              <tr><td>Sideband Power (Psb)</td><td id="calc-am-psb" class="val">-</td></tr>
+              <tr><td>Total Power (Pt)</td><td id="calc-am-pt" class="val">-</td></tr>
+              <tr><td>Transmission Efficiency (η)</td><td id="calc-am-eff" class="val">-</td></tr>
+              <tr><td>Required Bandwidth (BW)</td><td id="calc-am-bw" class="val">-</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="glass-panel math-card" id="am-equations"></div>
+      </div>
+
+      <!-- TAB 1B: DSB-SC Lab -->
+      <div class="tab-panel" id="mod1b">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">DSB-SC Controls</h2>
+          
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Message Frequency (fm)</span>
+              <span class="control-value" id="val-dsb-fm">1.0 kHz</span>
+            </div>
+            <input type="range" id="dsb-fm" min="100" max="2500" value="1000" step="50">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Message Amplitude (Am)</span>
+              <span class="control-value" id="val-dsb-am">1.0 V</span>
+            </div>
+            <input type="range" id="dsb-am" min="0.1" max="2.0" value="1.0" step="0.1">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Frequency (fc)</span>
+              <span class="control-value" id="val-dsb-fc">15.0 kHz</span>
+            </div>
+            <input type="range" id="dsb-fc" min="5000" max="30000" value="15000" step="500">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Amplitude (Ac)</span>
+              <span class="control-value" id="val-dsb-ac">1.5 V</span>
+            </div>
+            <input type="range" id="dsb-ac" min="0.5" max="3.0" value="1.5" step="0.1">
+          </div>
+        </div>
+
+        <div class="glass-panel control-card">
+          <h3 class="control-card-title">Power Analysis</h3>
+          <table class="calc-table">
+            <thead>
+              <tr><th>Parameter</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Carrier Power (Pc)</td><td id="calc-dsb-pc" class="val">-</td></tr>
+              <tr><td>Sideband Power (Psb)</td><td id="calc-dsb-psb" class="val">-</td></tr>
+              <tr><td>Total Power (Pt)</td><td id="calc-dsb-pt" class="val">-</td></tr>
+              <tr><td>Power Efficiency (η)</td><td id="calc-dsb-eff" class="val">-</td></tr>
+              <tr><td>Transmission Bandwidth (BW)</td><td id="calc-dsb-bw" class="val">-</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="glass-panel math-card" id="dsb-equations"></div>
+      </div>
+
+      <!-- TAB 1C: SSB-SC Lab -->
+      <div class="tab-panel" id="mod1c">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">SSB Controls</h2>
+          
+          <div class="control-group">
+            <label>Select Active Sideband</label>
+            <select id="ssb-sideband-select" class="instrument-select">
+              <option value="usb">Upper Sideband (USB)</option>
+              <option value="lsb">Lower Sideband (LSB)</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Message Frequency (fm)</span>
+              <span class="control-value" id="val-ssb-fm">1.0 kHz</span>
+            </div>
+            <input type="range" id="ssb-fm" min="100" max="2500" value="1000" step="50">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Message Amplitude (Am)</span>
+              <span class="control-value" id="val-ssb-am">1.0 V</span>
+            </div>
+            <input type="range" id="ssb-am" min="0.1" max="2.0" value="1.0" step="0.1">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Frequency (fc)</span>
+              <span class="control-value" id="val-ssb-fc">15.0 kHz</span>
+            </div>
+            <input type="range" id="ssb-fc" min="5000" max="30000" value="15000" step="500">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Amplitude (Ac)</span>
+              <span class="control-value" id="val-ssb-ac">1.5 V</span>
+            </div>
+            <input type="range" id="ssb-ac" min="0.5" max="3.0" value="1.5" step="0.1">
+          </div>
+        </div>
+
+        <div class="glass-panel control-card">
+          <h3 class="control-card-title">Bandwidth & Power comparison</h3>
+          <table class="calc-table">
+            <thead>
+              <tr><th>Parameter</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Carrier Power (Pc)</td><td id="calc-ssb-pc" class="val">-</td></tr>
+              <tr><td>Sideband Power (Psb)</td><td id="calc-ssb-psb" class="val">-</td></tr>
+              <tr><td>Total Power (Pt)</td><td id="calc-ssb-pt" class="val">-</td></tr>
+              <tr><td>Transmission Efficiency</td><td id="calc-ssb-eff" class="val">-</td></tr>
+              <tr><td>Required Bandwidth</td><td id="calc-ssb-bw" class="val">-</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="glass-panel math-card" id="ssb-equations"></div>
+      </div>
+
+      <!-- TAB 1D: VSB Simulator -->
+      <div class="tab-panel" id="mod1d">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">VSB Controls & Spectrum</h2>
+          
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Message Frequency (fm)</span>
+              <span class="control-value" id="val-vsb-fm">1.0 kHz</span>
+            </div>
+            <input type="range" id="vsb-fm" min="100" max="2500" value="1000" step="50">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Message Amplitude (Am)</span>
+              <span class="control-value" id="val-vsb-am">1.0 V</span>
+            </div>
+            <input type="range" id="vsb-am" min="0.1" max="2.0" value="1.0" step="0.1">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Frequency (fc)</span>
+              <span class="control-value" id="val-vsb-fc">15.0 kHz</span>
+            </div>
+            <input type="range" id="vsb-fc" min="5000" max="30000" value="15000" step="500">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Amplitude (Ac)</span>
+              <span class="control-value" id="val-vsb-ac">1.5 V</span>
+            </div>
+            <input type="range" id="vsb-ac" min="0.5" max="3.0" value="1.5" step="0.1">
+          </div>
+        </div>
+
+        <div class="glass-panel math-card">
+          <h3 class="control-card-title">Vestigial Sideband (VSB) Principles</h3>
+          <p style="font-size:0.85rem; line-height:1.5; color:var(--text-muted)">
+            VSB is a compromise between SSB and DSB. Filtering out a sideband completely (SSB) requires an ideal brickwall filter, which is impossible to implement practically. 
+            VSB solves this by passing one complete sideband and a **vestige** (small portion, typically 25%) of the other sideband.
+          </p>
+          <div id="vsb-equations"></div>
+        </div>
+      </div>
+
+      <!-- TAB 2A: AM Generation (Modulators) -->
+      <div class="tab-panel" id="mod2a">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">Modulator Circuits</h2>
+          
+          <div class="control-group">
+            <label>Select Modulator Type</label>
+            <select id="sq-mod-type" class="instrument-select">
+              <option value="square">Square Law Modulator</option>
+              <option value="gated">Gated / Switching Modulator</option>
+              <option value="balanced">Balanced Modulator (Carrier Suppression)</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Message Frequency (fm)</span>
+              <span class="control-value" id="val-sq-fm">1.0 kHz</span>
+            </div>
+            <input type="range" id="sq-fm" min="100" max="2500" value="1000" step="50">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Frequency (fc)</span>
+              <span class="control-value" id="val-sq-fc">15.0 kHz</span>
+            </div>
+            <input type="range" id="sq-fc" min="5000" max="30000" value="15000" step="500">
+          </div>
+        </div>
+
+        <div class="glass-panel math-card" id="mod-equations"></div>
+      </div>
+
+      <!-- TAB 2B: SSB Generation Methods -->
+      <div class="tab-panel" id="mod2b">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">SSB Transmitter Methods</h2>
+          
+          <div class="control-group">
+            <label>Method Architecture</label>
+            <select id="ssb-gen-type" class="instrument-select">
+              <option value="filter">Filter Method (DSB-SC + Sharp Bandpass Filter)</option>
+              <option value="phase">Phase Shift Method (Hartley Modulator using Hilbert transform)</option>
+              <option value="weaver">Third Method (Weaver Modulation - no Hilbert needed)</option>
+            </select>
+          </div>
+
+          <p style="font-size:0.85rem; line-height:1.5; color:var(--text-muted)" id="val-ssb-gen-type">
+            Filter Method
+          </p>
+        </div>
+
+        <div class="glass-panel math-card">
+          <h3 class="control-card-title">Phase Shift Method Derivation</h3>
+          <p style="font-size:0.85rem; line-height:1.5; color:var(--text-muted)">
+            The Hilbert transform shifts all frequency components of the message signal by -90°: $\hat{m}(t) = A_m \sin(2\pi f_m t)$.<br>
+            By combining in phase and quadrature paths:
+          </p>
+          <div class="formula-display">
+            s(t) = m(t)\cos(2\pi f_c t) \mp \hat{m}(t)\sin(2\pi f_c t)
+          </div>
+          <p style="font-size:0.85rem; line-height:1.5; color:var(--text-muted)">
+            Subtracting (-) selects the Upper Sideband (USB); adding (+) selects the Lower Sideband (LSB).
+          </p>
+        </div>
+      </div>
+
+      <!-- TAB 2C: AM Detection -->
+      <div class="tab-panel" id="mod2c">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">Receiver Demodulator Lab</h2>
+          
+          <div class="control-group">
+            <label>Detector Configuration</label>
+            <select id="det-type" class="instrument-select">
+              <option value="envelope">Envelope Detector (Diode-Capacitor circuit)</option>
+              <option value="synchronous">Synchronous / Coherent Detector</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Message Frequency (fm)</span>
+              <span class="control-value" id="val-det-fm">1.0 kHz</span>
+            </div>
+            <input type="range" id="det-fm" min="200" max="2000" value="1000" step="50">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Frequency (fc)</span>
+              <span class="control-value" id="val-det-fc">15.0 kHz</span>
+            </div>
+            <input type="range" id="det-fc" min="5000" max="25000" value="15000" step="500">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Time Constant (RC)</span>
+              <span class="control-value" id="val-det-rc">30.0 μs</span>
+            </div>
+            <input type="range" id="det-rc" min="5" max="300" value="30" step="5">
+          </div>
+
+          <!-- Synchronous offsets -->
+          <div id="sync-offset-group" style="display:none; flex-direction:column; gap: 0.75rem;">
+            <div class="control-group">
+              <div class="control-header">
+                <span class="control-label">Frequency Mismatch (Δf)</span>
+                <span class="control-value" id="val-det-df">0 Hz</span>
+              </div>
+              <input type="range" id="det-df" min="-200" max="200" value="0" step="10">
+            </div>
+
+            <div class="control-group">
+              <div class="control-header">
+                <span class="control-label">Phase Mismatch (Δφ)</span>
+                <span class="control-value" id="val-det-dphi">0°</span>
+              </div>
+              <input type="range" id="det-dphi" min="-180" max="180" value="0" step="5">
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-panel control-card">
+          <h3 class="control-card-title">Calibration Analysis</h3>
+          <p id="det-feedback" style="font-size:0.8rem; line-height:1.4; color:var(--text-main); font-family:'Fira Code', monospace;">
+            Analyzing filter responses...
+          </p>
+        </div>
+      </div>
+
+      <!-- TAB 2D: Superheterodyne Receiver -->
+      <div class="tab-panel" id="mod2d">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">Superheterodyne Receiver Tuning</h2>
+          
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Tuned RF Carrier Frequency (fc)</span>
+              <span class="control-value" id="val-rx-fc">1000 kHz</span>
+            </div>
+            <input type="range" id="rx-fc" min="540" max="1700" value="1000" step="10">
+          </div>
+        </div>
+
+        <div class="glass-panel control-card">
+          <h3 class="control-card-title">Mixer & Local Oscillator calculations</h3>
+          <table class="calc-table">
+            <thead>
+              <tr><th>Component Output</th><th>Frequency Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Intermediate Frequency (IF)</td><td id="calc-rx-fif" class="val">455 kHz</td></tr>
+              <tr><td>Local Oscillator (fLO = fc + fIF)</td><td id="calc-rx-flo" class="val">-</td></tr>
+              <tr><td>Image Frequency (fimg = fc + 2fIF)</td><td id="calc-rx-fimg" class="val">-</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 3: FM Laboratory -->
+      <div class="tab-panel" id="mod3">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">FM Modulator Controls</h2>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Modulating Frequency (fm)</span>
+              <span class="control-value" id="val-fm-fm">1.0 kHz</span>
+            </div>
+            <input type="range" id="fm-fm" min="100" max="2500" value="1000" step="50">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Modulating Amplitude (Am)</span>
+              <span class="control-value" id="val-fm-am">1.0 V</span>
+            </div>
+            <input type="range" id="fm-am" min="0.1" max="2.0" value="1.0" step="0.1">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Frequency (fc)</span>
+              <span class="control-value" id="val-fm-fc">15.0 kHz</span>
+            </div>
+            <input type="range" id="fm-fc" min="5000" max="25000" value="15000" step="500">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Amplitude (Ac)</span>
+              <span class="control-value" id="val-fm-ac">1.5 V</span>
+            </div>
+            <input type="range" id="fm-ac" min="0.5" max="3.0" value="1.5" step="0.1">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Frequency Deviation (Δf)</span>
+              <span class="control-value" id="val-fm-df">5.0 kHz</span>
+            </div>
+            <input type="range" id="fm-df" min="500" max="10000" value="5000" step="100">
+          </div>
+        </div>
+
+        <div class="glass-panel control-card">
+          <h3 class="control-card-title">FM Indices</h3>
+          <table class="calc-table">
+            <thead>
+              <tr><th>Index Parameter</th><th>Calculated Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Modulation Index (β = Δf / fm)</td><td id="calc-fm-beta" class="val">-</td></tr>
+              <tr><td>Carson's Rule Bandwidth</td><td id="calc-fm-bw" class="val">-</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="glass-panel math-card" id="fm-equations"></div>
+      </div>
+
+      <!-- TAB 3-PM: PM Laboratory -->
+      <div class="tab-panel" id="mod3-pm">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">Phase Modulation Controls</h2>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Modulating Frequency (fm)</span>
+              <span class="control-value" id="val-pm-fm">1.0 kHz</span>
+            </div>
+            <input type="range" id="pm-fm" min="100" max="2500" value="1000" step="50">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Message Amplitude (Am)</span>
+              <span class="control-value" id="val-pm-am">1.0 V</span>
+            </div>
+            <input type="range" id="pm-am" min="0.1" max="2.0" value="1.0" step="0.1">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Frequency (fc)</span>
+              <span class="control-value" id="val-pm-fc">15.0 kHz</span>
+            </div>
+            <input type="range" id="pm-fc" min="5000" max="25000" value="15000" step="500">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Carrier Amplitude (Ac)</span>
+              <span class="control-value" id="val-pm-ac">1.5 V</span>
+            </div>
+            <input type="range" id="pm-ac" min="0.5" max="3.0" value="1.5" step="0.1">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Phase Deviation (Δθ_p)</span>
+              <span class="control-value" id="val-pm-dp">1.5 rad</span>
+            </div>
+            <input type="range" id="pm-dp" min="0.1" max="5.0" value="1.5" step="0.1">
+          </div>
+        </div>
+
+        <div class="glass-panel control-card">
+          <h3 class="control-card-title">PM Calculations</h3>
+          <table class="calc-table">
+            <thead>
+              <tr><th>Index Parameter</th><th>Calculated Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Phase Modulation Index (βp)</td><td id="calc-pm-index" class="val">-</td></tr>
+              <tr><td>Carson Bandwidth (2*(βp + 1)*fm)</td><td id="calc-pm-bw" class="val">-</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="glass-panel math-card" id="pm-equations"></div>
+      </div>
+
+      <!-- TAB 3-Bessel: Bessel Visualizer -->
+      <div class="tab-panel" id="mod3-bessel">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">Bessel Sideband Coefficients</h2>
+          
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Modulation Index (β)</span>
+              <span class="control-value" id="val-fm-beta-slider">2.4</span>
+            </div>
+            <input type="range" id="fm-beta-slider" min="0.0" max="10.0" value="2.4" step="0.1">
+          </div>
+
+          <p style="font-size:0.85rem; line-height:1.5; color:var(--text-muted)">
+            As β increases, the power spreads into higher-order sideband components ($J_1, J_2, J_3$). At specific indices (e.g. β = 2.4, 5.5), the carrier amplitude $J_0(β)$ goes to zero! This is the carrier-null calibration method.
+          </p>
+        </div>
+      </div>
+
+      <!-- TAB 4-FDM: FDM Simulator -->
+      <div class="tab-panel" id="mod4-fdm">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">Frequency Division Multiplexing</h2>
+          <p style="font-size:0.85rem; line-height:1.5; color:var(--text-muted)">
+            Toggle subcarrier channels. They are modulated to distinct frequencies and summed together into a single transmission spectrum.
+          </p>
+
+          <div class="control-group" style="flex-direction:row; gap:1.5rem">
+            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+              <input type="checkbox" id="fdm-ch1" checked>
+              <span>Channel 1 (10 kHz carrier)</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+              <input type="checkbox" id="fdm-ch2" checked>
+              <span>Channel 2 (20 kHz carrier)</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+              <input type="checkbox" id="fdm-ch3" checked>
+              <span>Channel 3 (30 kHz carrier)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4-TDM: TDM Simulator -->
+      <div class="tab-panel" id="mod4-tdm">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">Time Division Multiplexing</h2>
+          
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Commutator Sampling Rate</span>
+              <span class="control-value" id="val-tdm-rate">1000 Hz</span>
+            </div>
+            <input type="range" id="tdm-rate" min="500" max="3000" value="1000" step="50">
+          </div>
+
+          <p style="font-size:0.85rem; line-height:1.5; color:var(--text-muted)">
+            TDM samples multiple signals sequentially in time. A distributor switch (commutator) rotates at the sampling rate, allocating a specific time slice to each channel within a frame. Look at Channel 2 on the oscilloscope to see the PAM interleaved frames!
+          </p>
+        </div>
+      </div>
+
+      <!-- TAB: Noise Lab -->
+      <div class="tab-panel" id="mod-noise">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">Noise Injection Settings</h2>
+
+          <div class="control-group">
+            <label>Noise Distribution Model</label>
+            <select id="noise-type" class="instrument-select">
+              <option value="white">Additive White Gaussian Noise (AWGN)</option>
+              <option value="thermal">Thermal Johnson-Nyquist Noise</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Signal Amplitude (Am)</span>
+              <span class="control-value" id="val-noise-sig-power">1.0 V</span>
+            </div>
+            <input type="range" id="noise-sig-power" min="0.1" max="2.0" value="1.0" step="0.1">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span class="control-label">Noise Power Variance (σ²)</span>
+              <span class="control-value" id="val-noise-power">0.05 W</span>
+            </div>
+            <input type="range" id="noise-power" min="0.00" max="0.50" value="0.05" step="0.01">
+          </div>
+        </div>
+
+        <div class="glass-panel control-card">
+          <h3 class="control-card-title">Calculations</h3>
+          <table class="calc-table">
+            <thead>
+              <tr><th>Parameter</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Signal-to-Noise Ratio (SNR)</td><td id="calc-noise-snr" class="val">-</td></tr>
+              <tr><td>Receiver Noise Figure (NF)</td><td id="calc-noise-nf" class="val">-</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="glass-panel math-card" id="noise-equations"></div>
+      </div>
+
+      <!-- TAB: Comparison Dashboard -->
+      <div class="tab-panel" id="mod-dashboard">
+        <div class="glass-panel control-card" style="overflow-x:auto">
+          <h2 class="control-card-title">Modulation Systems Comparison</h2>
+          <table class="calc-table">
+            <thead>
+              <tr>
+                <th>Modulation Scheme</th>
+                <th>Bandwidth</th>
+                <th>Power Efficiency</th>
+                <th>Noise Immunity</th>
+                <th>Complexity</th>
+                <th>Primary Applications</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>AM (DSB-TC)</strong></td>
+                <td>2 fm</td>
+                <td>Poor (max 33%)</td>
+                <td>Low</td>
+                <td>Very Low</td>
+                <td>AM Broadcasting, Aeronautical radio</td>
+              </tr>
+              <tr>
+                <td><strong>DSB-SC</strong></td>
+                <td>2 fm</td>
+                <td>Excellent (100%)</td>
+                <td>Medium</td>
+                <td>Medium</td>
+                <td>Analogue TV color signals, subcarriers</td>
+              </tr>
+              <tr>
+                <td><strong>SSB</strong></td>
+                <td>fm</td>
+                <td>Excellent (100%)</td>
+                <td>High</td>
+                <td>High</td>
+                <td>Point-to-point military HF, Amateur Radio</td>
+              </tr>
+              <tr>
+                <td><strong>VSB</strong></td>
+                <td>fm + fv (approx 1.25 fm)</td>
+                <td>Good</td>
+                <td>Medium</td>
+                <td>Medium</td>
+                <td>Analog TV broadcasting (Video signal)</td>
+              </tr>
+              <tr>
+                <td><strong>FM</strong></td>
+                <td>2(Δf + fm) (Carson's)</td>
+                <td>Excellent (constant envelope)</td>
+                <td>Very High</td>
+                <td>High</td>
+                <td>FM Radio, police communication, satellite</td>
+              </tr>
+              <tr>
+                <td><strong>PM</strong></td>
+                <td>2(βp + 1)fm</td>
+                <td>Excellent</td>
+                <td>High</td>
+                <td>High</td>
+                <td>Deep space probe tracking, synthesis of FM</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: Master Calculator -->
+      <div class="tab-panel" id="mod-calc">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">Formula Numerical Solver</h2>
+          
+          <div class="control-group">
+            <label>Solver Category</label>
+            <select id="calc-type" class="instrument-select">
+              <option value="am">AM Parameters Solver</option>
+              <option value="fm">FM Parameters Solver</option>
+              <option value="noise">Noise & SNR Calculator</option>
+            </select>
+          </div>
+
+          <div id="calc-inputs" style="display:flex; flex-direction:column; gap:0.75rem">
+            <!-- Dynamic inputs inserted by calc.js -->
+          </div>
+        </div>
+
+        <div class="glass-panel control-card">
+          <h3 class="control-card-title">Step-by-Step Outputs</h3>
+          <table class="calc-table">
+            <thead>
+              <tr><th>Property</th><th>Result</th></tr>
+            </thead>
+            <tbody id="calc-outputs-table">
+              <!-- Solved rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: Assessment Quiz -->
+      <div class="tab-panel" id="mod-quiz">
+        <div class="glass-panel control-card">
+          <h2 class="control-card-title">Assessment Laboratory</h2>
+          <p style="font-size:0.85rem; line-height:1.5; color:var(--text-muted)">
+            Test your knowledge of the analog communication systems, waveforms, and calculations. Current score is updated instantly.
+          </p>
+          <div style="font-family:'Orbitron', sans-serif; font-size:0.9rem; color:var(--neon-green)">
+            Score: <span id="quiz-score">0 / 8</span>
+          </div>
+        </div>
+
+        <div class="glass-panel control-card" id="quiz-question-card">
+          <!-- Quiz details populated by quiz.js -->
+        </div>
+        
+        <button class="btn btn-primary" id="quiz-next-btn" style="align-self:flex-end; display:none">
+          Next Question <i data-lucide="arrow-right"></i>
+        </button>
+      </div>
+
+    </main>
+
+    <!-- 3. Right Instruments Rack (Oscilloscope, Phasor, Bessel screens) -->
+    <aside id="instrument-rack">
+      
+      <!-- Virtual Oscilloscope Panel -->
+      <div class="instrument-container glass-panel" style="padding:0.75rem">
+        <div class="instrument-title">
+          <span>Digital Oscilloscope</span>
+          <span style="color:var(--neon-cyan)">MSO-2000</span>
+        </div>
+        
+        <div class="instrument-screen-wrapper">
+          <canvas id="osc-screen" class="instrument-screen"></canvas>
+          <div class="screen-overlay">
+            <span>CH1: Msg (Pink)</span>
+            <span>CH2: Mod (Blue)</span>
+            <span>Δt: <span id="cursor-dt">N/A</span></span>
+            <span>f: <span id="cursor-df">N/A</span></span>
+          </div>
+        </div>
+
+        <!-- Oscilloscope Knobs / Selects -->
+        <div class="instrument-controls">
+          <div class="instrument-knob-group">
+            <label>Mode / Channels</label>
+            <select id="osc-ch" class="instrument-select">
+              <option value="dual">Dual (CH1 + CH2)</option>
+              <option value="ch1">CH1 (Message)</option>
+              <option value="ch2">CH2 (Modulated)</option>
+              <option value="xy">X-Y (Lissajous)</option>
+            </select>
+          </div>
+
+          <div class="instrument-knob-group">
+            <label>Domain View</label>
+            <select id="osc-mode" class="instrument-select">
+              <option value="time">Time Domain</option>
+              <option value="fft">FFT (Spectrum)</option>
+            </select>
+          </div>
+
+          <div class="instrument-knob-group">
+            <label>Timebase (t/div)</label>
+            <select id="osc-timebase" class="instrument-select">
+              <option value="0.002">2.0 ms/div</option>
+              <option value="0.001">1.0 ms/div</option>
+              <option value="0.0005">0.5 ms/div</option>
+              <option value="0.0002" selected>0.2 ms/div</option>
+              <option value="0.0001">0.1 ms/div</option>
+              <option value="0.00005">50 μs/div</option>
+              <option value="0.00002">20 μs/div</option>
+            </select>
+          </div>
+
+          <div class="instrument-knob-group">
+            <label>CH1 scale (V/div)</label>
+            <select id="osc-volts1" class="instrument-select">
+              <option value="0.5">0.5 V/div</option>
+              <option value="1.0" selected>1.0 V/div</option>
+              <option value="2.0">2.0 V/div</option>
+            </select>
+          </div>
+
+          <div class="instrument-knob-group">
+            <label>CH2 scale (V/div)</label>
+            <select id="osc-volts2" class="instrument-select">
+              <option value="1.0">1.0 V/div</option>
+              <option value="2.0" selected>2.0 V/div</option>
+              <option value="5.0">5.0 V/div</option>
+            </select>
+          </div>
+
+          <button class="btn" id="osc-cursor-toggle" style="padding:0.25rem; font-size:0.75rem; justify-content:center;">
+            <i data-lucide="scissors" style="font-size:0.75rem"></i> Cursors
+          </button>
+        </div>
+      </div>
+
+      <!-- Phasor Display Panel -->
+      <div class="instrument-container glass-panel" id="phasor-instrument-container" style="padding:0.75rem">
+        <div class="instrument-title">
+          <span>Phasor Diagram</span>
+          <span style="color:var(--neon-pink)">V-Space</span>
+        </div>
+        <div class="instrument-screen-wrapper">
+          <canvas id="phasor-screen" class="instrument-screen"></canvas>
+        </div>
+      </div>
+
+      <!-- Bessel Visualizer Curve Display Panel (Hidden by default, shown in Bessel tab) -->
+      <div class="instrument-container glass-panel" id="bessel-instrument-container" style="padding:0.75rem; display:none">
+        <div class="instrument-title">
+          <span>Bessel Curve Jn(β)</span>
+          <span style="color:var(--neon-green)">Math-Vis</span>
+        </div>
+        <div class="instrument-screen-wrapper">
+          <canvas id="bessel-screen" class="instrument-screen"></canvas>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- Interactive Information Modal (Block diagram details) -->
+  <div class="modal-overlay" id="info-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="info-modal-title">Block Details</h3>
+        <button class="modal-close" id="info-modal-close">&times;</button>
+      </div>
+      <div id="info-modal-text" style="font-size:0.85rem; line-height:1.5; color:var(--text-muted)">
+        Block detail explanations go here.
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Scripts in order -->
+  <script src="src/canvas/oscilloscope.js"></script>
+  <script src="src/canvas/phasor.js"></script>
+  <script src="src/canvas/bessel.js"></script>
+  <script src="src/modules/modulations.js"></script>
+  <script src="src/modules/generation_detection.js"></script>
+  <script src="src/modules/angle_multiplex.js"></script>
+  <script src="src/modules/noise_tools.js"></script>
+  <script src="src/modules/quiz.js"></script>
+  <script src="src/main.js"></script>
+
+  <!-- Initialize lucide icons -->
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
