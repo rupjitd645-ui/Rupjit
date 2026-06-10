@@ -2,7 +2,8 @@
 
 An interactive, web-based virtual laboratory designed to simulate and visualize various analog communication systems, modulation techniques, and hardware behaviors. This platform serves as an intuitive educational tool for students and engineering enthusiasts to explore RF (Radio Frequency) and communication principles in real-time.
 
-🌐 **Live Demo:** [Explore RF-VIRTUALLAB](https://rupjitd645-ui.github.io/Rupjit/)
+🌐 **Live Demo:**
+https://rupjitd645-ui.github.io/Rupjit/
 
 ---
 
